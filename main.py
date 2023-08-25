@@ -2,7 +2,7 @@ from svn.remote import RemoteClient as SVNClient
 import os
 
 class Repo:
-    def __init__(self, name, url):
+    def __init__(self, name: str, url: str):
         self.name = name
         self.url = url+"/trunk/"
         self.connection = SVNClient(self.url)
@@ -17,22 +17,16 @@ class Repo:
             result += f"{id + 1}. {name.split('/')[0]}\n"
         return result
     
-    def select(self, id):
+    def select(self, id: int):
         url = self.url + self.sub_dirs()[id - 1]
         return SVNClient(url)
 
 class Repos():
-    def __init__(self):
+    def __init__(self, repos: list):
         self.current = None
-        self.repos = [
-            Repo("Harvard CS50x Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-x-projects"),
-            Repo("Harvard CS50P Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-python-projects"),
-            Repo("Harvard CS50AI Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-ai-projects"),
-            Repo("Harvard CS50W Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-web-projects"),
-            Repo("Harvard CS50G Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-game-projects")
-        ]
+        self.repos = repos
 
-    def select(self, id):
+    def select(self, id: int):
         print(f"Selected: {self.repos[id - 1].name}")
         self.current = self.repos[id - 1]
 
@@ -42,10 +36,16 @@ class Repos():
             result += f"{id + 1}. {obj.name}\n"
         return result
 
+repos = Repos([
+    Repo("Harvard CS50x Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-x-projects"),
+    Repo("Harvard CS50P Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-python-projects"),
+    Repo("Harvard CS50AI Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-ai-projects"),
+    Repo("Harvard CS50W Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-web-projects"),
+    Repo("Harvard CS50G Projects", "https://github.com/GrandEchoWhiskey/harvard-cs50-game-projects")
+])
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-print(Repos())
-repos = Repos()
+print(repos)
 if selection := input("Select: "):
     if selection.isnumeric():
         repos.select(int(selection))
